@@ -72,7 +72,7 @@
 "0","dft <- df %>% "
 "0","  arrange(y,x) %>% "
 "0","  group_by(y) %>% "
-"0","  group_modify(~ add_row(.x, x = 201)) %>% "
+"0","  group_modify(~ add_row(.x, x = nstitches + 1)) %>% "
 "0","  mutate(knit = x -1, "
 "0","         diff = lag(x),"
 "0","         k = if_else(is.na(diff), knit, knit-diff),"

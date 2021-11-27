@@ -3,9 +3,8 @@ title: "Knitting maternal mortality rates"
 subtitle: "An infinity scarf pattern"
 output: pdf_document
 params:
-  stitch_rate: 50
+  stitch_rate: 20
   jitter: "yes"
-  method: "circular"
 ---
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
@@ -26,16 +25,9 @@ library(janitor)
 # variables pulled from Shiny App: stitch_rate, jitter
 stitch_rate = params$stitch_rate
 jitter = params$jitter
-method = params$method
-# show certain bits of text only for circular knitting
-if(method == "circular"){
-  show.text = TRUE
-} else{
-  show.text = FALSE
-}
 # specify pattern dimensions
 nstitches = 200
-nrows = 40 # Warning: this is currently hard-coded in the "Pattern" section below
+nrows = 40
 # specify number of knit rows at the start and end of the pattern (i.e. no bobbles)
 nknit_start = 2
 nknit_end = 2
@@ -74,29 +66,9 @@ for (i in 1:tot_bobble_rows) {
     y = rep(i+nknit_start,bobbles_row)
   }
   else {
-    if (method == "circular") {
-      prev_bobble = x_add[length(x_add)]
-      next_bobble = bobble_freq - (nstitches - prev_bobble)
-      x_add = seq(from = next_bobble, to = nstitches, by = bobble_freq)
-    }
-    else {
-      if ((i %% 2) == 0) {
-        # even rows
-        prev_bobble = x_add[length(x_add)]
-        next_bobble = nstitches - prev_bobble
-        
-        odd_dir_bobble = nstitches - (bobble_freq - next_bobble) + 1
-        
-        x_add = seq(from = odd_dir_bobble, to = 1, by = -1*bobble_freq)
-      }
-      else {
-        # odd rows
-        prev_bobble = x_add[length(x_add)]
-        next_bobble = (bobble_freq - prev_bobble) + 1
-        
-        x_add = seq(from = next_bobble, to = nstitches, by = bobble_freq)
-      }
-    }
+    prev_bobble = x_add[length(x_add)]
+    next_bobble = bobble_freq - (nstitches - prev_bobble)
+    x_add = seq(from = next_bobble, to = nstitches, by = bobble_freq)
     bobbles_row = length(x_add)
     x = append(x, x_add)
     y_add = rep(i+nknit_start,bobbles_row)
@@ -153,7 +125,7 @@ pat <- dft %>%
 ### Materials
 
 * Medium or worsted weight yarn
-* US size 9 (5.5 mm) `r if(show.text){"circular"}` knitting needles
+* US size 9 (5.5 mm) circular knitting needles
 * stitch marker
 
 **Gauge:**  
@@ -171,51 +143,50 @@ Use any size needles to obtain gauge.
 
 ### Pattern
 
-**Cast on `r nstitches` stitches.** `r if(show.text){"Be careful not to twist any stitches when joining knitting in the round. Place a marker at the beginning of the round."}`
+**Cast on `r nstitches` stitches.** Be careful not to twist any stitches when joining knitting in the round. Place a marker at the beginning of the round.
 
-**`r pat$row[1]`** `r pat$pattern[1]`  
-**`r pat$row[2]`** `r pat$pattern[2]`  
-**`r pat$row[3]`** `r pat$pattern[3]`  
-**`r pat$row[4]`** `r pat$pattern[4]`  
+`r pat$row[1]` `r pat$pattern[1]`  
+`r pat$row[2]` `r pat$pattern[2]`  
+`r pat$row[3]` `r pat$pattern[3]`  
+`r pat$row[4]` `r pat$pattern[4]`  
   
-**`r pat$row[5]`** `r pat$pattern[5]`  
-**`r pat$row[6]`** `r pat$pattern[6]`  
-**`r pat$row[7]`** `r pat$pattern[7]`  
-**`r pat$row[8]`** `r pat$pattern[8]`  
-**`r pat$row[9]`** `r pat$pattern[9]`  
+`r pat$row[5]` `r pat$pattern[5]`  
+`r pat$row[6]` `r pat$pattern[6]`  
+`r pat$row[7]` `r pat$pattern[7]`  
+`r pat$row[8]` `r pat$pattern[8]`  
+`r pat$row[9]` `r pat$pattern[9]`  
   
-**`r pat$row[10]`** `r pat$pattern[10]`  
-**`r pat$row[11]`** `r pat$pattern[11]`  
-**`r pat$row[12]`** `r pat$pattern[12]`  
-**`r pat$row[13]`** `r pat$pattern[13]`  
-**`r pat$row[14]`** `r pat$pattern[14]`  
+`r pat$row[10]` `r pat$pattern[10]`  
+`r pat$row[11]` `r pat$pattern[11]`  
+`r pat$row[12]` `r pat$pattern[12]`  
+`r pat$row[13]` `r pat$pattern[13]`  
+`r pat$row[14]` `r pat$pattern[14]`  
   
-**`r pat$row[15]`** `r pat$pattern[15]`  
-**`r pat$row[16]`** `r pat$pattern[16]`  
-**`r pat$row[17]`** `r pat$pattern[17]`  
-**`r pat$row[18]`** `r pat$pattern[18]`  
-**`r pat$row[19]`** `r pat$pattern[19]`  
+`r pat$row[15]` `r pat$pattern[15]`  
+`r pat$row[16]` `r pat$pattern[16]`  
+`r pat$row[17]` `r pat$pattern[17]`  
+`r pat$row[18]` `r pat$pattern[18]`  
+`r pat$row[19]` `r pat$pattern[19]`  
   
-**`r pat$row[20]`** `r pat$pattern[20]`  
-**`r pat$row[21]`** `r pat$pattern[21]`  
-**`r pat$row[22]`** `r pat$pattern[22]`  
-**`r pat$row[23]`** `r pat$pattern[23]`  
-**`r pat$row[24]`** `r pat$pattern[24]`  
+`r pat$row[20]` `r pat$pattern[20]`  
+`r pat$row[21]` `r pat$pattern[21]`  
+`r pat$row[22]` `r pat$pattern[22]`  
+`r pat$row[23]` `r pat$pattern[23]`  
+`r pat$row[24]` `r pat$pattern[24]`  
   
-**`r pat$row[25]`** `r pat$pattern[25]`  
-**`r pat$row[26]`** `r pat$pattern[26]`  
-**`r pat$row[27]`** `r pat$pattern[27]`  
-**`r pat$row[28]`** `r pat$pattern[28]`  
-**`r pat$row[29]`** `r pat$pattern[29]`  
+`r pat$row[25]` `r pat$pattern[25]`  
+`r pat$row[26]` `r pat$pattern[26]`  
+`r pat$row[27]` `r pat$pattern[27]`  
+`r pat$row[28]` `r pat$pattern[28]`  
+`r pat$row[29]` `r pat$pattern[29]`  
   
-**`r pat$row[30]`** `r pat$pattern[30]`  
-**`r pat$row[31]`** `r pat$pattern[31]`  
-**`r pat$row[32]`** `r pat$pattern[32]`  
-**`r pat$row[33]`** `r pat$pattern[33]`  
-**`r pat$row[34]`** `r pat$pattern[34]`  
+`r pat$row[30]` `r pat$pattern[30]`  
+`r pat$row[31]` `r pat$pattern[31]`  
+`r pat$row[32]` `r pat$pattern[32]`  
+`r pat$row[33]` `r pat$pattern[33]`  
+`r pat$row[34]` `r pat$pattern[34]`  
   
-**`r pat$row[35]`** `r pat$pattern[35]`  
-**`r pat$row[36]`** `r pat$pattern[36]`  
-**`r pat$row[37]`** `r pat$pattern[37]`  
-**`r pat$row[38]`** `r pat$pattern[38]`  
-
+`r pat$row[35]` `r pat$pattern[35]`  
+`r pat$row[36]` `r pat$pattern[36]`  
+`r pat$row[37]` `r pat$pattern[37]`  
+`r pat$row[38]` `r pat$pattern[38]`  

@@ -9,29 +9,9 @@ set_bobble_locations <- function(first_bobble, nstitches, tot_bobble_rows, bobbl
       y = rep(i+nknit_start,bobbles_row)
     }
     else {
-      if (method == "circular") {
-        prev_bobble = x_add[length(x_add)]
-        next_bobble = bobble_freq - (nstitches - prev_bobble)
-        x_add = seq(from = next_bobble, to = nstitches, by = bobble_freq)
-      }
-      else {
-        if ((i %% 2) == 0) {
-          # even rows
-          prev_bobble = x_add[length(x_add)]
-          next_bobble = nstitches - prev_bobble
-          
-          odd_dir_bobble = nstitches - (bobble_freq - next_bobble) + 1
-          
-          x_add = seq(from = odd_dir_bobble, to = 1, by = -1*bobble_freq)
-        }
-        else {
-          # odd rows
-          prev_bobble = x_add[length(x_add)]
-          next_bobble = (bobble_freq - prev_bobble) + 1
-          
-          x_add = seq(from = next_bobble, to = nstitches, by = bobble_freq)
-        }
-      }
+      prev_bobble = x_add[length(x_add)]
+      next_bobble = bobble_freq - (nstitches - prev_bobble)
+      x_add = seq(from = next_bobble, to = nstitches, by = bobble_freq)
       bobbles_row = length(x_add)
       x = append(x, x_add)
       y_add = rep(i+nknit_start,bobbles_row)
@@ -54,7 +34,7 @@ set_bobble_locations <- function(first_bobble, nstitches, tot_bobble_rows, bobbl
 }
 
 # compute inter-bobble timings
-inter_bobble_timing <- function(df) {
+inter_bobble_timing <- function(df, nstitches) {
   dft <- df %>%
     arrange(y,x) %>%
     group_by(y) %>%
@@ -97,39 +77,22 @@ write_pattern <- function(dft, nrows, nstitches, nknit_start, nknit_end) {
 
 # plot knitting pattern
 plot_pattern <- function(df, nrows, nstitches, method) {
-  # specify y-axis labels
-  y_left = rep("",nrows)
-  y_right = rep("",nrows)
-  y_left[seq(from = 2, to = nrows, by = 2)] <- seq(from = 2, to = nrows, by = 2)
-  y_right[seq(from = 1, to = nrows, by = 2)] <- seq(from = 1, to = nrows, by = 2)
-  
   # plot
-  p = df %>%
+  p <- df %>% 
     ggplot(aes(x = x, y = y)) +
-    geom_point(size = 3, stroke = 1, colour = "#9e9e00") #pch = 15, 
-  if (method == "circular") {
-    p = p + scale_y_continuous(breaks = seq(from = 1, to = nrows, by = 1), position = "right")
-  } else {
-    p = p + scale_y_continuous(breaks = seq(from = 1, to = nrows, by = 1),
-                               labels = y_left,
-                               sec.axis = sec_axis(~ . *1,
-                                                   breaks = seq(from = 1, to = nrows, by = 1),
-                                                   labels = y_right))
-  }
-  p = p + scale_x_reverse(breaks = seq(from = nstitches, to = 1, by = -1)) +
-    coord_fixed(xlim =c(nstitches+0.5, 0.5), ylim = c(0.5,nrows+0.5), clip = "on", expand = FALSE) +
+    geom_point(size = 3, stroke = 1, colour = "#9e9e00") + 
+    scale_x_reverse(breaks = seq(from = nstitches, to = 1, by = -1)) +
+    scale_y_continuous(breaks = seq(from = 1, to = nrows, by = 1), position = "right") +
+    coord_fixed(xlim = c(nstitches+0.5, 0.5), ylim = c(0.5,nrows+0.5), clip = "on", expand = FALSE) +
     labs(title = "",
-         subtitle = ,
+         subtitle = "",
          y = "",
          x = "") + 
     theme_bw() +
-    theme(panel.border = element_blank(), #panel.grid.major = element_blank(),
+    theme(panel.border = element_blank(),
           panel.grid.major = element_line(size = 0.25, colour= "#b8b800"),
           panel.grid.minor = element_line(size = 0.25, colour= "#b8b800"),
-          #axis.title = element_blank(),
           axis.ticks = element_blank(),
-          #axis.text.y = element_text(size = 10, face = "bold", colour = "black"),
-          #axis.text.x = element_blank(),
           axis.text = element_blank())
   
   return(p)
